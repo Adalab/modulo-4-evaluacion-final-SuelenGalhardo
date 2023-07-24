@@ -72,7 +72,7 @@ server.get('/recetas/:id', async (req, res) => {
 server.post('/recetas', async (req, res) => {
   const newRecipe = req.body;
   try {
-    const insert = 'INSERT INTO recetas (`nombre`, `ingredientes`, `instrucciones`) VALUES (?,?,?)';
+    const insert = 'INSERT INTO recetas (`nombre`, `ingredientes`, `instruciones`) VALUES (?,?,?)';
     const conn = await getConnection();
     const [result] = await conn.query(insert, [
       newRecipe.nombre,
@@ -85,6 +85,7 @@ server.post('/recetas', async (req, res) => {
       id: result.insertId,
     });
   } catch (error) {
+    console.log(error);
     res.json({
       success: false,
       message: 'ha ocorrido un error',
@@ -95,12 +96,11 @@ server.post('/recetas', async (req, res) => {
 //Actualizar una receta existente (PUT /recetas/:id):
 server.put('/recetas/:id', async (req, res) => {
   const recipeId = req.params.id;
-  const { name, ingredients, instrucions } = req.body;
+  const { nombre, ingredientes, instruciones } = req.body;
   try {
-    const update =
-      'UPDATE recetas SET nombre = ?, ingredientes = ?, instrucciones = ? WHERE id = ?';
+    const update = 'UPDATE recetas SET nombre = ?, ingredientes = ?, instruciones = ? WHERE id = ?';
     const conn = await getConnection();
-    const [result] = await conn.query(update, [name, ingredients, instrucions, recipeId]);
+    const [result] = await conn.query(update, [nombre, ingredientes, instruciones, recipeId]);
     conn.end();
     res.json({
       success: true,
