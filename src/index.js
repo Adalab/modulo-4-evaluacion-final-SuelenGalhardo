@@ -42,7 +42,7 @@ server.listen(port, () => {
 
 // Endpoints
 
-// GET /api/items
+// GET /api/
 server.get('/recetas', async (req, res) => {
   const selectRE = 'SELECT * FROM recetas';
   const conn = await getConnection();
@@ -69,7 +69,49 @@ server.get('/recetas/:id', async (req, res) => {
 });
 
 //Crear una nueva receta (POST /recetas):
+server.post('/recetas', async (req, res) => {
+  const newRecipe = req.body;
+  try {
+    const insert = 'INSERT INTO recetas (`nombre`, `ingredientes`, `instrucciones`) VALUES (?,?,?)';
+    const conn = await getConnection();
+    const [result] = await conn.query(insert, [
+      newRecipe.nombre,
+      newRecipe.ingredientes,
+      newRecipe.instrucciones,
+    ]);
+    conn.end();
+    res.json({
+      success: true,
+      id: result.insertId,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'error',
+    });
+  }
+});
 
 //Actualizar una receta existente (PUT /recetas/:id):
+server.put('/recetas/:id', async (req, res) => {
+  const recipeId = req.params.id;
+  const { name, ingredients, instrucions } = req.body;
+  try {
+    const update =
+      'UPDATE recetas SET nombre = ?, ingredientes = ?, instrucciones = ? WHERE id = ?';
+    const conn = await getConnection();
+    const [result] = await conn.query(update, [name, ingredients, instrucions, recipeId]);
+    conn.end();
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: 'error al cambiar la receta',
+    });
+  }
+});
 
 //Eliminar una receta (DELETE /recetas/:id)
