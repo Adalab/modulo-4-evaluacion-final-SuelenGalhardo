@@ -87,7 +87,7 @@ server.post('/recetas', async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
-      message: 'error',
+      message: 'ha ocorrido un error',
     });
   }
 });
@@ -115,3 +115,20 @@ server.put('/recetas/:id', async (req, res) => {
 });
 
 //Eliminar una receta (DELETE /recetas/:id)
+server.delete('/recetas/:id', async (req, res) => {
+  const deleteRe = req.params.id;
+  try {
+    const deleteSql = 'DELETE FROM recetas WHERE id = ?';
+    const conn = await getConnection();
+    const [result] = await conn.query(deleteSql, deleteRe);
+    conn.end();
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'error al eliminar receta',
+    });
+  }
+});
