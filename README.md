@@ -16,3 +16,9 @@ Postman
 Visual Studio Code
 GitHub
 
+This project has been supervised by:
+
+Dayana Romero @dayanare
+Iván Garrido @igarrido-adalab
+Yanelis Serrano @ytaylordev
+
